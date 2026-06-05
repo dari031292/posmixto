@@ -1,26 +1,26 @@
-import { Component, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { PlayerInputComponent } from '../../../../core/components/player-input/player-input.component';
-import { ScoreGridComponent } from '../score-grid/score-grid.component';
-import { GeneralaStateService } from '../../services/generala-state.service';
-import { Player } from '../../../../core/models/player.types';
+import { Component, effect, inject } from '@angular/core';
 import { HlmButton } from '@spartan-ng/helm/button';
+import { PlayerInputComponent } from '../../../../core/components/player-input/player-input.component';
+import { Player } from '../../../../core/models/player.types';
 import { actionClickTrigger, LayoutService } from '../../../../layout/layout.service';
+import { BazasGridComponent } from '../bazas-grid/bazas-grid.component';
+import { BazasStateService } from '../../services/bazas-state.service';
 
 @Component({
-    selector: 'app-generala',
-    imports: [CommonModule, RouterModule, PlayerInputComponent, ScoreGridComponent, HlmButton],
-    templateUrl: './generala.component.html'
+    selector: 'app-bazas',
+    standalone: true,
+    imports: [CommonModule, PlayerInputComponent, BazasGridComponent, HlmButton],
+    templateUrl: './bazas.component.html'
 })
-export class GeneralaComponent {
-    stateService = inject(GeneralaStateService);
+export class BazasComponent {
+    stateService = inject(BazasStateService);
     private layoutService = inject(LayoutService);
+
     isGameActive = this.stateService.isGameActive;
     players = this.stateService.activePlayers;
 
     constructor() {
-        // Listen to layout header action clicks for reset
         effect(() => {
             const action = actionClickTrigger();
             if (action === 'reset') {
@@ -35,15 +35,11 @@ export class GeneralaComponent {
     }
 
     startGame(playersList: Player[]) {
-        if (playersList.length > 0) {
-            this.stateService.startGame(playersList);
+        if (playersList.length === 0) {
+            return;
         }
-    }
 
-    endGame() {
-        if (confirm('¿Estás seguro de que quieres terminar la partida?')) {
-            this.stateService.endGame();
-        }
+        this.stateService.startGame(playersList);
     }
 
     resetGame() {

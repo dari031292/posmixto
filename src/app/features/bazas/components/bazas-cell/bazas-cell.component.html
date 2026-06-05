@@ -1,0 +1,9 @@
+<div class="flex cursor-pointer items-center justify-center px-2 py-2 transition-colors hover:bg-muted/50"
+    [class.text-primary]="!!entry()" [class.font-bold]="!!entry()" (click)="toggleSelection()">
+
+    @if (entry(); as currentEntry) {
+    <span class="text-base leading-none">{{ currentEntry.points }}</span>
+    } @else {
+    <span class="text-transparent select-none">-</span>
+    }
+</div>

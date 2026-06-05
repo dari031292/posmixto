@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterModule, ActivatedRoute, Router } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import { HeaderComponent, type HeaderAction } from './header.component';
 import { LayoutService } from './layout.service';
 
@@ -28,7 +28,6 @@ export interface LayoutRouteData {
 })
 export class LayoutComponent {
   private route = inject(ActivatedRoute);
-  private router = inject(Router);
   layoutService = inject(LayoutService);
 
   constructor() {
@@ -45,14 +44,6 @@ export class LayoutComponent {
   }
 
   onActionClick(action: HeaderAction) {
-    if (action === 'reset') {
-      // Navigate with query param to trigger reset
-      this.router.navigate([], { 
-        queryParams: { action: 'reset' },
-        queryParamsHandling: 'merge'
-      });
-    }
-    // Also trigger the signal so features can handle custom actions (like share)
     this.layoutService.triggerActionClick(action);
   }
 }

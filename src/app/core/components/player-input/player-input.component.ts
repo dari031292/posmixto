@@ -1,13 +1,13 @@
 import { Component, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { Player } from '../../models/player.types';
 import { nanoid } from 'nanoid';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { HlmInput } from '@spartan-ng/helm/input';
 import { HlmLabel } from '@spartan-ng/helm/label';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucidePlus, lucideX } from '@ng-icons/lucide';
+import { Player } from '../../models/player.types';
 
 @Component({
     selector: 'app-player-input',
@@ -29,6 +29,6 @@ export class PlayerInputComponent {
     }
 
     removePlayer(id: string) {
-        this.players.update(players => players.filter(p => p.id !== id));
+        this.players.update(players => players.filter(player => player.id !== id));
     }
 }

@@ -1,0 +1,40 @@
+<div class="h-full flex flex-col pt-4">
+    @if (gameState(); as state) {
+    <div class="flex-1 w-full overflow-x-auto overflow-y-auto rounded-xl border border-border bg-card text-card-foreground">
+        <table class="w-full border-collapse text-sm">
+            <thead class="sticky top-0 z-20 bg-muted/50">
+                <tr>
+                    <th class="sticky left-0 z-30 w-18 border-b border-r bg-muted/50 p-3 text-center font-medium">#</th>
+                    @for (player of players(); track player.id) {
+                    <th class="min-w-[110px] border-b p-3 text-center font-medium">
+                        <div class="truncate w-full">{{ player.name }}</div>
+                    </th>
+                    }
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-border">
+                @for (round of rounds; track round.id) {
+                <tr class="transition-colors hover:bg-muted/30 border-b-stone-500">
+                    <td class="sticky left-0 z-10 border-r bg-card p-3 align-middle">
+                        <div class="text-center font-medium">{{ getRoundTitle(round) }}</div>
+                    </td>
+                    @for (player of players(); track player.id) {
+                    <td class="border-l p-0 text-center align-middle first:border-l-0">
+                        <app-bazas-cell [playerId]="player.id" [round]="round" [scores]="state.scores[player.id]" />
+                    </td>
+                    }
+                </tr>
+                }
+            </tbody>
+            <tfoot class="sticky bottom-0 z-20 bg-muted/50">
+                <tr>
+                    <th class="sticky left-0 z-30 border-r border-t bg-muted/50 p-3 text-left font-medium">Total</th>
+                    @for (player of players(); track player.id) {
+                    <th class="border-t p-3 text-center font-bold">{{ getPlayerTotal(player.id) }}</th>
+                    }
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    }
+</div>

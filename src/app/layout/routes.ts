@@ -14,6 +14,17 @@ export const LAYOUT_ROUTES: Routes = [
     ]
   },
   {
+    path: 'bazas',
+    component: LayoutComponent,
+    data: {
+      title: 'Anotador de Bazas',
+      action: 'reset'
+    } satisfies LayoutRouteData,
+    children: [
+      { path: '', loadChildren: () => import('../features/bazas/bazas.routes').then(m => m.routes) }
+    ]
+  },
+  {
     path: 'truco',
     component: LayoutComponent,
     data: {
