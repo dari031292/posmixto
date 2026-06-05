@@ -18,6 +18,7 @@ export class GeneralaComponent implements OnInit {
     private layoutService = inject(LayoutService);
     isGameActive = this.stateService.isGameActive;
     private route = inject(ActivatedRoute);
+    players = this.stateService.activePlayers;
 
     constructor() {
         // Listen to layout header action clicks for reset
@@ -38,8 +39,9 @@ export class GeneralaComponent implements OnInit {
         });
     }
 
-    setupPlayers: Player[] = [];
-    players = this.stateService.activePlayers; // In case we want to show it before starting
+    updatePlayers(players: Player[]) {
+        this.stateService.setPlayers(players);
+    }
 
     startGame(playersList: Player[]) {
         if (playersList.length > 0) {

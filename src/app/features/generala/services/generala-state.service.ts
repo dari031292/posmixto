@@ -7,6 +7,11 @@ import { Player } from '../models/player.types';
 
 const STORAGE_KEY = 'PWA_GENERALA_STATE';
 
+interface GeneralaStorageData {
+    state: GeneralaGameState | null;
+    players: Player[];
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -29,24 +34,29 @@ export class GeneralaStateService {
     }
 
     private loadSavedGame() {
-        const saved = this.sessionService.loadGame<{ state: GeneralaGameState, players: Player[] }>(STORAGE_KEY);
+        const saved = this.sessionService.loadGame<GeneralaStorageData>(STORAGE_KEY);
         if (saved) {
             this.state.set(saved.state);
-            this.playersRef.set(saved.players);
+            this.playersRef.set(saved.players ?? []);
         }
     }
 
     private persist() {
         const currentState = this.state();
         const currentPlayers = this.playersRef();
-        if (currentState) {
+        if (currentState || currentPlayers.length > 0) {
             this.sessionService.saveGame(STORAGE_KEY, { state: currentState, players: currentPlayers });
         } else {
             this.sessionService.clearGame(STORAGE_KEY);
         }
     }
 
-    startGame(players: Player[]) {
+    setPlayers(players: Player[]) {
+        this.playersRef.set(players);
+        this.persist();
+    }
+
+    startGame(players: Player[] = this.playersRef()) {
         const scores: Record<string, PlayerScores> = {};
         players.forEach(p => scores[p.id] = {});
 
