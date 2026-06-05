@@ -21,7 +21,7 @@ export class MusComponent {
     { key: 'chica', shortLabel: 'C' },
     { key: 'pares', shortLabel: 'P' },
     { key: 'juego', shortLabel: 'J' },
-    { key: 'puntos', shortLabel: 'Pts' }
+    { key: 'puntos', shortLabel: 'Pt' }
   ];
 
   readonly hoveredDropTeam = signal<Team | null>(null);
