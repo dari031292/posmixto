@@ -75,7 +75,7 @@
       @for (category of categories; track category.key) {
         <div
           class="grid cursor-pointer grid-cols-[4.5rem_1fr] border-b border-white select-none last:border-b-0"
-          (click)="addCategoryPoint(category.key)"
+          (click)="handleCategoryTap(category.key)"
           (pointerdown)="startCategoryInteraction($event, category.key)"
         >
           <div class="flex items-center justify-center border-r border-white text-lg font-semibold tracking-wide">

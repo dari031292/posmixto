@@ -40,7 +40,7 @@ export const LAYOUT_ROUTES: Routes = [
     component: LayoutComponent,
     data: {
       title: 'Mus',
-      actions: ['undo', 'reset']
+      actions: ['subtract', 'undo', 'reset']
     } satisfies LayoutRouteData,
     children: [
       { path: '', loadChildren: () => import('../features/mus/mus.routes').then(m => m.routes) }

@@ -7,6 +7,7 @@ export { type HeaderAction } from './header.component';
 export interface LayoutConfig {
   title: string;
   actions: HeaderAction[];
+  activeActions?: HeaderAction[];
 }
 
 // Global signal to track action clicks - features subscribe to this

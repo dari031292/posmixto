@@ -1,5 +1,4 @@
-import { CommonModule } from '@angular/common';
-import { Component, HostListener, effect, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { PalitosComponent } from '../../../shared/components/palitos/palitos.component';
 import { actionClickTrigger, LayoutService } from '../../../../layout/layout.service';
 import { MusService } from '../../services/mus.service';
@@ -8,9 +7,13 @@ import { MusCategoryDefinition, MusCategoryKey, PendingCategoryPointer, Team } f
 
 @Component({
   selector: 'app-mus',
-  standalone: true,
-  imports: [CommonModule, PalitosComponent],
-  templateUrl: './mus.component.html'
+  imports: [PalitosComponent],
+  templateUrl: './mus.component.html',
+  host: {
+    '(window:pointermove)': 'onWindowPointerMove($event)',
+    '(window:pointerup)': 'onWindowPointerUp($event)',
+    '(window:pointercancel)': 'onWindowPointerCancel($event)'
+  }
 })
 export class MusComponent {
   private musService = inject(MusService);
@@ -26,6 +29,7 @@ export class MusComponent {
 
   readonly hoveredDropTeam = signal<Team | null>(null);
   readonly dragPreview = signal<{ category: MusCategoryKey; x: number; y: number } | null>(null);
+  readonly subtractMode = signal(false);
 
   private longPressTimer: ReturnType<typeof setTimeout> | null = null;
   private longPressHandled = false;
@@ -44,6 +48,12 @@ export class MusComponent {
 
       if (action === 'undo') {
         this.undo();
+        this.layoutService.resetActionTrigger();
+        return;
+      }
+
+      if (action === 'subtract') {
+        this.toggleSubtractMode();
         this.layoutService.resetActionTrigger();
         return;
       }
@@ -75,12 +85,17 @@ export class MusComponent {
     return this.musService.state.categoryValues[category];
   }
 
-  addCategoryPoint(category: MusCategoryKey) {
+  handleCategoryTap(category: MusCategoryKey) {
     if (this.consumeLongPress() || this.consumeDrag()) {
       return;
     }
 
-    this.musService.addCategoryPoint(category);
+    if (this.subtractMode()) {
+      this.musService.removeCategoryPoint(category);
+    } else {
+      this.musService.addCategoryPoint(category);
+    }
+
     this.syncHeaderActions();
   }
 
@@ -89,7 +104,12 @@ export class MusComponent {
       return;
     }
 
-    this.musService.addPoint(team);
+    if (this.subtractMode()) {
+      this.musService.removePoint(team);
+    } else {
+      this.musService.addPoint(team);
+    }
+
     this.syncHeaderActions();
   }
 
@@ -126,21 +146,14 @@ export class MusComponent {
   }
 
   reset() {
-    this.cancelLongPress();
-    this.pendingCategoryPointer = null;
-    this.longPressHandled = false;
-    this.dragHandled = false;
-    this.clearCategoryDragState();
+    this.cancelInteractions();
+    this.subtractMode.set(false);
     this.musService.reset();
     this.syncHeaderActions();
   }
 
   undo() {
-    this.cancelLongPress();
-    this.pendingCategoryPointer = null;
-    this.longPressHandled = false;
-    this.dragHandled = false;
-    this.clearCategoryDragState();
+    this.cancelInteractions();
     this.musService.undo();
     this.syncHeaderActions();
   }
@@ -172,8 +185,11 @@ export class MusComponent {
     return [p1, p2, p3, p4];
   }
 
-  @HostListener('window:pointermove', ['$event'])
   onWindowPointerMove(event: PointerEvent) {
+    if (this.subtractMode()) {
+      return;
+    }
+
     if (this.activeDraggedCategory) {
       this.hoveredDropTeam.set(this.findTeamAtPoint(event.clientX, event.clientY));
       this.dragPreview.set({
@@ -206,7 +222,6 @@ export class MusComponent {
     });
   }
 
-  @HostListener('window:pointerup', ['$event'])
   onWindowPointerUp(event: PointerEvent) {
     if (this.activeDraggedCategory) {
       const team = this.findTeamAtPoint(event.clientX, event.clientY);
@@ -226,7 +241,6 @@ export class MusComponent {
     this.releasePointerCapture(event);
   }
 
-  @HostListener('window:pointercancel', ['$event'])
   onWindowPointerCancel(event: PointerEvent) {
     this.pendingCategoryPointer = null;
     this.cancelLongPress();
@@ -263,6 +277,20 @@ export class MusComponent {
     this.dragPreview.set(null);
   }
 
+  private cancelInteractions() {
+    this.cancelLongPress();
+    this.pendingCategoryPointer = null;
+    this.longPressHandled = false;
+    this.dragHandled = false;
+    this.clearCategoryDragState();
+  }
+
+  private toggleSubtractMode() {
+    this.cancelInteractions();
+    this.subtractMode.update(active => !active);
+    this.syncHeaderActions();
+  }
+
   private findTeamAtPoint(x: number, y: number): Team | null {
     const element = document.elementFromPoint(x, y)?.closest('[data-team-zone]');
     const teamId = element?.getAttribute('data-team-id');
@@ -292,7 +320,8 @@ export class MusComponent {
   private syncHeaderActions() {
     this.layoutService.setConfig({
       title: 'Mus',
-      actions: this.musService.canUndo() ? ['undo', 'reset'] : ['reset']
+      actions: this.musService.canUndo() ? ['subtract', 'undo', 'reset'] : ['subtract', 'reset'],
+      activeActions: this.subtractMode() ? ['subtract'] : []
     });
   }
 }

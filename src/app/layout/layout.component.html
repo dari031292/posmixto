@@ -2,6 +2,7 @@
   <app-header
     [title]="layoutService.config().title"
     [actions]="layoutService.config().actions"
+    [activeActions]="layoutService.config().activeActions ?? []"
     (actionClick)="onActionClick($event)"
   />
 

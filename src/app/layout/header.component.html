@@ -9,10 +9,12 @@
     @for (headerAction of actions(); track headerAction) {
       <button
         hlmBtn
-        variant="ghost"
+        type="button"
+        [variant]="isActionActive(headerAction) ? 'destructive' : 'ghost'"
         size="icon"
-        class="text-muted-foreground hover:text-foreground"
+        [class.text-muted-foreground]="!isActionActive(headerAction)"
         [attr.aria-label]="getActionLabel(headerAction)"
+        [attr.aria-pressed]="headerAction === 'subtract' ? isActionActive(headerAction) : null"
         (click)="onActionClick(headerAction)"
       >
         @if (headerAction === 'reset') {
@@ -21,6 +23,8 @@
           <ng-icon name="lucideShare" />
         } @else if (headerAction === 'undo') {
           <ng-icon name="lucideUndo2" />
+        } @else if (headerAction === 'subtract') {
+          <ng-icon name="lucideCircleMinus" />
         }
       </button>
     }
