@@ -2,24 +2,16 @@ import { Component, ElementRef, inject, OnInit, signal, ViewChild, effect } from
 import { CommonModule } from '@angular/common';
 import { DragDropModule, CdkDragEnd } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
-import { TeamBuilderService } from '../../../../core/services/team-builder.service';
+import { TeamBuilderService } from '../../../shared/services/team-builder.service';
 import { actionClickTrigger, LayoutService } from '../../../../layout/layout.service';
-import { parsePlayerNames } from '../../../../core/utils/player-list-parser';
+import { parsePlayerNames } from '../../../shared/utils/player-list-parser';
 
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { lucidePlus, lucideUsers, lucideTrash, lucideShare2, lucideCheck, lucideClipboard } from '@ng-icons/lucide';
-
-export interface PlayerToken {
-  id: string;
-  name: string;
-  initialX: number;
-  initialY: number;
-  currentY?: number;
-  team: 'A' | 'B';
-}
+import { PlayerToken } from '../../models/team-builder.types';
 
 @Component({
   selector: 'app-team-builder',
@@ -27,6 +19,7 @@ export interface PlayerToken {
   imports: [CommonModule, DragDropModule, FormsModule, ...HlmButtonImports, ...HlmIconImports, ...HlmInputImports, NgIconComponent],
   providers: [provideIcons({ lucidePlus, lucideUsers, lucideTrash, lucideShare2, lucideCheck, lucideClipboard })],
   templateUrl: './team-builder.component.html',
+  styleUrl: './team-builder.component.scss'
 })
 export class TeamBuilder implements OnInit {
   private teamService = inject(TeamBuilderService);

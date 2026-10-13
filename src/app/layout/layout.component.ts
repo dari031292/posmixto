@@ -13,18 +13,7 @@ export interface LayoutRouteData {
   selector: 'app-layout',
   standalone: true,
   imports: [RouterModule, HeaderComponent],
-  template: `
-    <div class="flex flex-col h-[100dvh] bg-background text-foreground">
-      <app-header 
-        [title]="layoutService.config().title" 
-        [actions]="layoutService.config().actions"
-        (actionClick)="onActionClick($event)" />
-      
-      <main class="flex-1 min-h-0 overflow-hidden">
-        <router-outlet />
-      </main>
-    </div>
-  `
+  templateUrl: './layout.component.html'
 })
 export class LayoutComponent {
   private route = inject(ActivatedRoute);

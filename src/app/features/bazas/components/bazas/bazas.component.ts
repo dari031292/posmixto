@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, inject } from '@angular/core';
 import { HlmButton } from '@spartan-ng/helm/button';
-import { PlayerInputComponent } from '../../../../core/components/player-input/player-input.component';
-import { Player } from '../../../../core/models/player.types';
+import { PlayerInputComponent } from '../../../shared/components/player-input/player-input.component';
+import { Player } from '../../../shared/models/player.types';
 import { actionClickTrigger, LayoutService } from '../../../../layout/layout.service';
 import { BazasGridComponent } from '../bazas-grid/bazas-grid.component';
 import { BazasStateService } from '../../services/bazas-state.service';

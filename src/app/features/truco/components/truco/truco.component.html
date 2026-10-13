@@ -1,0 +1,99 @@
+<div class="flex flex-col h-full bg-background text-foreground">
+  <main class="flex-1 overflow-hidden relative touch-none select-none bg-zinc-900 text-zinc-100 grid grid-cols-[1fr_4px_1fr] pb-4 border border-border mx-auto w-full">
+    <!-- Equipo 1 -->
+    <div class="h-full grid grid-rows-[1fr_auto] py-4 sm:px-8">
+      <div
+        class="min-h-0 cursor-pointer grid grid-rows-[1fr_auto_1fr]"
+        (click)="addPoint(0)"
+        (contextmenu)="removePoint($event, 0)"
+      >
+        <!-- Malas -->
+        <div class="grid grid-cols-1 place-items-center gap-4">
+          @for (stick of getSticks(scores[0] > halfScore ? halfScore : scores[0]); track $index) {
+            <app-palitos [count]="stick"></app-palitos>
+          }
+        </div>
+
+        <div class="w-full h-1 bg-zinc-700 my-4 opacity-50"></div>
+
+        <!-- Buenas -->
+        <div class="grid grid-cols-1 place-items-center gap-4">
+          @for (stick of getSticks(Math.max(0, scores[0] - halfScore)); track $index) {
+            <app-palitos [count]="stick"></app-palitos>
+          }
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between gap-4 px-4 pt-4">
+        <button
+          hlmBtn
+          type="button"
+          variant="outline"
+          size="icon-lg"
+          class="size-12 text-xl"
+          aria-label="Restar un punto al equipo 1"
+          [disabled]="scores[0] === 0"
+          (click)="removePoint($event, 0)"
+        >−</button>
+        <button
+          hlmBtn
+          type="button"
+          size="icon-lg"
+          class="size-12 text-xl"
+          aria-label="Sumar un punto al equipo 1"
+          [disabled]="scores[0] === maxScore"
+          (click)="addPointFromControl($event, 0)"
+        >+</button>
+      </div>
+    </div>
+
+    <div class="w-full h-full bg-zinc-500"></div>
+
+    <!-- Equipo 2 -->
+    <div class="h-full grid grid-rows-[1fr_auto] py-4 sm:px-8">
+      <div
+        class="min-h-0 cursor-pointer grid grid-rows-[1fr_auto_1fr]"
+        (click)="addPoint(1)"
+        (contextmenu)="removePoint($event, 1)"
+      >
+        <!-- Malas -->
+        <div class="grid grid-cols-1 place-items-center gap-4">
+          @for (stick of getSticks(scores[1] > halfScore ? halfScore : scores[1]); track $index) {
+            <app-palitos [count]="stick"></app-palitos>
+          }
+        </div>
+
+        <div class="w-full h-1 bg-zinc-700 my-4 opacity-50"></div>
+
+        <!-- Buenas -->
+        <div class="grid grid-cols-1 place-items-center gap-4">
+          @for (stick of getSticks(Math.max(0, scores[1] - halfScore)); track $index) {
+            <app-palitos [count]="stick"></app-palitos>
+          }
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between gap-4 px-4 pt-4">
+        <button
+          hlmBtn
+          type="button"
+          variant="outline"
+          size="icon-lg"
+          class="size-12 text-xl"
+          aria-label="Restar un punto al equipo 2"
+          [disabled]="scores[1] === 0"
+          (click)="removePoint($event, 1)"
+        >−</button>
+        <button
+          hlmBtn
+          type="button"
+          size="icon-lg"
+          class="size-12 text-xl"
+          aria-label="Sumar un punto al equipo 2"
+          [disabled]="scores[1] === maxScore"
+          (click)="addPointFromControl($event, 1)"
+        >+</button>
+      </div>
+    </div>
+  </main>
+</div>

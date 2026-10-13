@@ -6,26 +6,18 @@
         <div class="team-header team-b">Equipo B</div> -->
 
         <!-- Single boundary for all players -->
-        <div class="pitch-boundary" style="position: absolute; top:0; left:0; right:0; bottom:0;">
+        <div class="pitch-boundary">
             @for (player of players(); track player.id) {
             <div class="player-token" [class.team-a-token]="player.team === 'A'"
                 [class.team-b-token]="player.team === 'B'" [class.deleting]="deletingIds.has(player.id)" cdkDrag
                 cdkDragBoundary=".pitch-container" [cdkDragFreeDragPosition]="{x: player.initialX, y: player.initialY}"
                 (cdkDragEnded)="onDragEnded($event, player)" (cdkDragStarted)="onLongPressEnd(player.id)"
                 (pointerdown)="onLongPressStart($event, player.id)" (pointerup)="onLongPressEnd(player.id)"
-                (pointercancel)="onLongPressEnd(player.id)" (pointerleave)="onLongPressEnd(player.id)"
-                style="position: absolute; z-index: 10; touch-action: none;">
+                (pointercancel)="onLongPressEnd(player.id)" (pointerleave)="onLongPressEnd(player.id)">
                 <div class="token-circle">{{ player.name.charAt(0).toUpperCase() }}</div>
                 <div class="token-name">{{ player.name }}</div>
             </div>
             }
-
-            <!-- @if (players().length === 0) {
-            <div class="pitch-empty-hint">
-                <ng-icon hlm name="lucideUsers" size="xl" style="width: 48px; height: 48px; opacity: 0.4;"></ng-icon>
-                <p style="opacity: 0.5; margin-top: 0.5rem;">Agrégá jugadores abajo</p>
-            </div>
-            } -->
         </div>
     </main>
 

@@ -1,10 +1,10 @@
 import { Component, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { PlayerInputComponent } from '../../../../core/components/player-input/player-input.component';
+import { PlayerInputComponent } from '../../../shared/components/player-input/player-input.component';
 import { ScoreGridComponent } from '../score-grid/score-grid.component';
 import { GeneralaStateService } from '../../services/generala-state.service';
-import { Player } from '../../../../core/models/player.types';
+import { Player } from '../../../shared/models/player.types';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { actionClickTrigger, LayoutService } from '../../../../layout/layout.service';
 

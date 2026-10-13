@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, effect, inject, signal } from '@angular/core';
-import { PalitosComponent } from '../../../../core/components/palitos/palitos.component';
+import { PalitosComponent } from '../../../shared/components/palitos/palitos.component';
 import { actionClickTrigger, LayoutService } from '../../../../layout/layout.service';
 import { MusService } from '../../services/mus.service';
 import { DRAG_THRESHOLD_PX, LONG_PRESS_MS, MUS_MAX_SCORE } from '../../models/mus.domain';

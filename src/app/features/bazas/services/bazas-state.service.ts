@@ -1,7 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { nanoid } from 'nanoid';
 import { GameSessionService } from '../../../core/services/game-session.service';
-import { Player } from '../../../core/models/player.types';
+import { Player } from '../../shared/models/player.types';
 import { BazasGameState, BazasPlayerScores, BazasRoundDefinition, BazasScoreEntry } from '../models/bazas.types';
 import { BazasScoringService } from './bazas-scoring.service';
 

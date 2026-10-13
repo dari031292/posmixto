@@ -32,7 +32,7 @@ export const LAYOUT_ROUTES: Routes = [
       action: 'reset'
     } satisfies LayoutRouteData,
     children: [
-      { path: '', loadComponent: () => import('../features/truco/components/truco/truco.component').then(m => m.TrucoComponent) }
+      { path: '', loadChildren: () => import('../features/truco/truco.routes').then(m => m.routes) }
     ]
   },
   {
@@ -43,7 +43,7 @@ export const LAYOUT_ROUTES: Routes = [
       actions: ['undo', 'reset']
     } satisfies LayoutRouteData,
     children: [
-      { path: '', loadComponent: () => import('../features/mus/components/mus/mus.component').then(m => m.MusComponent) }
+      { path: '', loadChildren: () => import('../features/mus/mus.routes').then(m => m.routes) }
     ]
   },
   {
@@ -53,7 +53,7 @@ export const LAYOUT_ROUTES: Routes = [
       title: 'Recibir Comparte',
     } satisfies LayoutRouteData,
     children: [
-      { path: '', loadComponent: () => import('../features/share-receiver/components/share-receiver/share-receiver.component').then(m => m.ShareReceiverComponent) }
+      { path: '', loadChildren: () => import('../features/share-receiver/share-receiver.routes').then(m => m.routes) }
     ]
   },
   {
@@ -64,7 +64,7 @@ export const LAYOUT_ROUTES: Routes = [
       action: 'share'
     } satisfies LayoutRouteData,
     children: [
-      { path: '', loadComponent: () => import('../features/team-builder/components/team-builder/team-builder.component').then(m => m.TeamBuilder) }
+      { path: '', loadChildren: () => import('../features/team-builder/team-builder.routes').then(m => m.routes) }
     ]
   }
 ];

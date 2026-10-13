@@ -18,43 +18,7 @@ export type BazasDialogResult = { action: 'select', entry: BazasScoreEntry } | {
     selector: 'app-bazas-dialog',
     standalone: true,
     imports: [CommonModule, HlmDialogImports, HlmButton],
-    template: `
-        <hlm-dialog-header>
-            <h3 hlmDialogTitle>Anotar</h3>
-        </hlm-dialog-header>
-
-        <div class="space-y-4 py-4">
-            <section class="space-y-2">
-                <p class="text-sm font-medium">Bazas ganadas</p>
-                <div class="grid grid-cols-3 gap-2">
-                    @for (option of trickOptions(); track option) {
-                    <button hlmBtn [variant]="selectedTricks() === option ? 'default' : 'outline'" (click)="selectedTricks.set(option)">
-                        {{ option }}
-                    </button>
-                    }
-                </div>
-            </section>
-
-            <section class="space-y-2">
-                <p class="text-sm font-medium">¿Adivinó?</p>
-                <div class="grid grid-cols-2 gap-2">
-                    <button hlmBtn [variant]="!predictedCorrectly() ? 'default' : 'outline'" (click)="predictedCorrectly.set(false)">
-                        No (+0)
-                    </button>
-                    <button hlmBtn [variant]="predictedCorrectly() ? 'default' : 'outline'" (click)="predictedCorrectly.set(true)">
-                        Sí (+10)
-                    </button>
-                </div>
-            </section>
-        </div>
-
-        <div class="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end">
-            @if (context.hasValue) {
-            <button hlmBtn variant="secondary" (click)="clearScore()">Borrar anotación</button>
-            }
-            <button hlmBtn (click)="confirmSelection()">{{ totalPoints() }} puntos</button>
-        </div>
-    `
+    templateUrl: './bazas-dialog.component.html'
 })
 export class BazasDialogComponent {
     private scoringService = inject(BazasScoringService);

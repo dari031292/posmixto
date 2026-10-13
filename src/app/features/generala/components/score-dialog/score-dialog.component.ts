@@ -17,28 +17,7 @@ export type ScoreDialogResult = { action: 'select', option: any } | { action: 'c
   selector: 'app-score-dialog',
   standalone: true,
   imports: [CommonModule, HlmDialogImports, HlmButton],
-  template: `
-    <hlm-dialog-header>
-      <h3 hlmDialogTitle>Anotar</h3>
-      <!-- <p hlmDialogDescription></p> -->
-    </hlm-dialog-header>
-    
-    <div class="grid grid-cols-1 gap-2 py-4">
-      @for (opt of context.options; track opt.label) {
-        <button hlmBtn 
-                [variant]="opt.type === 'TACHA' ? 'destructive' : 'secondary'"
-                (click)="selectOption(opt)">
-          {{ opt.label }}
-        </button>
-      }
-    </div>
-    
-    <div class="flex justify-end gap-1 pt-4">
-      @if (context.hasValue) {
-        <button hlmBtn variant="secondary" (click)="clearScore()">Borrar Anotación</button>
-      }
-    </div>
-  `
+  templateUrl: './score-dialog.component.html'
 })
 export class ScoreDialogComponent {
   context = injectBrnDialogCtx<ScoreDialogData>();

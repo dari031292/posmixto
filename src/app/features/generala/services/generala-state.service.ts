@@ -3,7 +3,7 @@ import { GeneralaGameState, PlayerScores, ScoreCategory, ScoreEntry } from '../m
 import { nanoid } from 'nanoid';
 import { GeneralaScoringService } from './generala-scoring.service';
 import { GameSessionService } from '../../../core/services/game-session.service';
-import { Player } from '../../../core/models/player.types';
+import { Player } from '../../shared/models/player.types';
 
 const STORAGE_KEY = 'PWA_GENERALA_STATE';
 

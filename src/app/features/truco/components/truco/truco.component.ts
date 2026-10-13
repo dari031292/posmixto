@@ -1,174 +1,28 @@
-import { Component, inject, Injectable, effect } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GameSessionService } from '../../../../core/services/game-session.service';
 import { actionClickTrigger, LayoutService } from '../../../../layout/layout.service';
-import { PalitosComponent } from '../../../../core/components/palitos/palitos.component';
+import { PalitosComponent } from '../../../shared/components/palitos/palitos.component';
 import { HlmButton } from '@spartan-ng/helm/button';
-
-const TRUCO_STORAGE_KEY = 'PWA_TRUCO_STATE';
-
-@Injectable({
-  providedIn: 'root'
-})
-export class TrucoService {
-  private sessionService = inject(GameSessionService);
-  scores: [number, number] = [0, 0];
-
-  constructor() {
-    this.loadSavedGame();
-  }
-
-  private loadSavedGame() {
-    const saved = this.sessionService.loadGame<[number, number]>(TRUCO_STORAGE_KEY);
-    if (saved) {
-      this.scores = saved;
-    }
-  }
-
-  private persist() {
-    this.sessionService.saveGame(TRUCO_STORAGE_KEY, this.scores);
-  }
-
-  addPoint(team: 0 | 1) {
-    if (this.scores[team] < 30) {
-      this.scores[team]++;
-      this.persist();
-    }
-  }
-
-  removePoint(team: 0 | 1) {
-    if (this.scores[team] > 0) {
-      this.scores[team]--;
-      this.persist();
-    }
-  }
-
-  reset() {
-    this.scores = [0, 0];
-    this.sessionService.clearGame(TRUCO_STORAGE_KEY);
-  }
-}
+import { TRUCO_HALF_SCORE, TRUCO_MAX_SCORE } from '../../models/truco.domain';
+import { TrucoScores, TrucoTeam } from '../../models/truco.types';
+import { TrucoService } from '../../services/truco.service';
 
 @Component({
   selector: 'app-truco',
   standalone: true,
   imports: [CommonModule, PalitosComponent, HlmButton],
-  template: `
-    <div class="flex flex-col h-full bg-background text-foreground">
-      <main class="flex-1 overflow-hidden relative touch-none select-none bg-zinc-900 text-zinc-100 grid grid-cols-[1fr_4px_1fr] pb-4 border border-border mx-auto w-full">
-        <!-- Team 1 Side -->
-        <div 
-          class="h-full grid grid-rows-[1fr_auto] py-4 sm:px-8"
-        >
-          <div
-            class="min-h-0 cursor-pointer grid grid-rows-[1fr_auto_1fr]"
-            (click)="addPoint(0)"
-            (contextmenu)="removePoint($event, 0)"
-          >
-            <!-- Malas -->
-            <div class="grid grid-cols-1 place-items-center gap-4">
-              @for (stick of getSticks(scores[0] > 15 ? 15 : scores[0]); track $index) {
-                <app-palitos [count]="stick"></app-palitos>
-              }
-            </div>
-
-            <!-- Midline Divider -->
-            <div class="w-full h-1 bg-zinc-700 my-4 opacity-50"></div>
-
-            <!-- Buenas -->
-            <div class="grid grid-cols-1 place-items-center gap-4">
-              @for (stick of getSticks(Math.max(0, scores[0] - 15)); track $index) {
-                <app-palitos [count]="stick"></app-palitos>
-              }
-            </div>
-          </div>
-
-          <div class="flex items-center justify-between gap-4 px-4 pt-4">
-            <button
-              hlmBtn
-              type="button"
-              variant="outline"
-              size="icon-lg"
-              class="size-12 text-xl"
-              aria-label="Restar un punto al equipo 1"
-              [disabled]="scores[0] === 0"
-              (click)="removePoint($event, 0)"
-            >−</button>
-            <button
-              hlmBtn
-              type="button"
-              size="icon-lg"
-              class="size-12 text-xl"
-              aria-label="Sumar un punto al equipo 1"
-              [disabled]="scores[0] === 30"
-              (click)="addPointFromControl($event, 0)"
-            >+</button>
-          </div>
-        </div>
-  
-        <!-- Vertical Divider separating teams -->
-        <div class="w-full h-full bg-zinc-500"></div>
-  
-        <!-- Team 2 Side -->
-        <div 
-          class="h-full grid grid-rows-[1fr_auto] py-4 sm:px-8"
-        >
-          <div
-            class="min-h-0 cursor-pointer grid grid-rows-[1fr_auto_1fr]"
-            (click)="addPoint(1)"
-            (contextmenu)="removePoint($event, 1)"
-          >
-            <!-- Malas -->
-            <div class="grid grid-cols-1 place-items-center gap-4">
-              @for (stick of getSticks(scores[1] > 15 ? 15 : scores[1]); track $index) {
-                <app-palitos [count]="stick"></app-palitos>
-              }
-            </div>
-
-            <!-- Midline Divider -->
-            <div class="w-full h-1 bg-zinc-700 my-4 opacity-50"></div>
-
-            <!-- Buenas -->
-            <div class="grid grid-cols-1 place-items-center gap-4">
-              @for (stick of getSticks(Math.max(0, scores[1] - 15)); track $index) {
-                <app-palitos [count]="stick"></app-palitos>
-              }
-            </div>
-          </div>
-
-          <div class="flex items-center justify-between gap-4 px-4 pt-4">
-            <button
-              hlmBtn
-              type="button"
-              variant="outline"
-              size="icon-lg"
-              class="size-12 text-xl"
-              aria-label="Restar un punto al equipo 2"
-              [disabled]="scores[1] === 0"
-              (click)="removePoint($event, 1)"
-            >−</button>
-            <button
-              hlmBtn
-              type="button"
-              size="icon-lg"
-              class="size-12 text-xl"
-              aria-label="Sumar un punto al equipo 2"
-              [disabled]="scores[1] === 30"
-              (click)="addPointFromControl($event, 1)"
-            >+</button>
-          </div>
-        </div>
-      </main>
-    </div>
-  `
+  templateUrl: './truco.component.html'
 })
 export class TrucoComponent {
   private trucoService = inject(TrucoService);
   private layoutService = inject(LayoutService);
-  Math = Math;
+
+  readonly Math = Math;
+  readonly maxScore = TRUCO_MAX_SCORE;
+  readonly halfScore = TRUCO_HALF_SCORE;
 
   constructor() {
-    // Listen to layout action clicks for reset
+    // Escucha la acción de reinicio emitida por el layout.
     effect(() => {
       const action = actionClickTrigger();
       if (action === 'reset') {
@@ -178,20 +32,20 @@ export class TrucoComponent {
     });
   }
 
-  get scores(): [number, number] {
+  get scores(): TrucoScores {
     return this.trucoService.scores;
   }
 
-  addPoint(team: 0 | 1) {
+  addPoint(team: TrucoTeam) {
     this.trucoService.addPoint(team);
   }
 
-  addPointFromControl(event: Event, team: 0 | 1) {
+  addPointFromControl(event: Event, team: TrucoTeam) {
     event.stopPropagation();
     this.addPoint(team);
   }
 
-  removePoint(event: Event, team: 0 | 1) {
+  removePoint(event: Event, team: TrucoTeam) {
     event.preventDefault(); // Evita el menú contextual.
     event.stopPropagation();
     this.trucoService.removePoint(team);
@@ -201,8 +55,7 @@ export class TrucoComponent {
     this.trucoService.reset();
   }
 
-  // Returns an array of numbers representing palitos for a half (0 to 15 points)
-  // Always returns exactly 3 elements to preserve deterministic flex/grid alignment layout.
+  // Devuelve siempre tres grupos de palitos para conservar la alineación del tablero.
   getSticks(points: number): number[] {
     const p1 = Math.min(5, Math.max(0, points));
     const p2 = Math.min(5, Math.max(0, points - 5));
