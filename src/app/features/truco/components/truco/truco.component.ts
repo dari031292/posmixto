@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { GameSessionService } from '../../../../core/services/game-session.service';
 import { actionClickTrigger, LayoutService } from '../../../../layout/layout.service';
 import { PalitosComponent } from '../../../../core/components/palitos/palitos.component';
+import { HlmButton } from '@spartan-ng/helm/button';
 
 const TRUCO_STORAGE_KEY = 'PWA_TRUCO_STATE';
 
@@ -51,31 +52,57 @@ export class TrucoService {
 @Component({
   selector: 'app-truco',
   standalone: true,
-  imports: [CommonModule, PalitosComponent],
+  imports: [CommonModule, PalitosComponent, HlmButton],
   template: `
     <div class="flex flex-col h-full bg-background text-foreground">
       <main class="flex-1 overflow-hidden relative touch-none select-none bg-zinc-900 text-zinc-100 grid grid-cols-[1fr_4px_1fr] pb-4 border border-border mx-auto w-full">
         <!-- Team 1 Side -->
         <div 
-          class="h-full cursor-pointer grid grid-rows-[1fr_auto_1fr] py-4 sm:px-8"
-          (click)="addPoint(0)"
-          (contextmenu)="removePoint($event, 0)"
+          class="h-full grid grid-rows-[1fr_auto] py-4 sm:px-8"
         >
-          <!-- Malas -->
-          <div class="grid grid-cols-1 place-items-center gap-4">
-            @for (stick of getSticks(scores[0] > 15 ? 15 : scores[0]); track $index) {
-              <app-palitos [count]="stick"></app-palitos>
-            }
+          <div
+            class="min-h-0 cursor-pointer grid grid-rows-[1fr_auto_1fr]"
+            (click)="addPoint(0)"
+            (contextmenu)="removePoint($event, 0)"
+          >
+            <!-- Malas -->
+            <div class="grid grid-cols-1 place-items-center gap-4">
+              @for (stick of getSticks(scores[0] > 15 ? 15 : scores[0]); track $index) {
+                <app-palitos [count]="stick"></app-palitos>
+              }
+            </div>
+
+            <!-- Midline Divider -->
+            <div class="w-full h-1 bg-zinc-700 my-4 opacity-50"></div>
+
+            <!-- Buenas -->
+            <div class="grid grid-cols-1 place-items-center gap-4">
+              @for (stick of getSticks(Math.max(0, scores[0] - 15)); track $index) {
+                <app-palitos [count]="stick"></app-palitos>
+              }
+            </div>
           </div>
-          
-          <!-- Midline Divider -->
-          <div class="w-full h-1 bg-zinc-700 my-4 opacity-50"></div>
-  
-          <!-- Buenas -->
-          <div class="grid grid-cols-1 place-items-center gap-4">
-            @for (stick of getSticks(Math.max(0, scores[0] - 15)); track $index) {
-              <app-palitos [count]="stick"></app-palitos>
-            }
+
+          <div class="flex items-center justify-between gap-4 px-4 pt-4">
+            <button
+              hlmBtn
+              type="button"
+              variant="outline"
+              size="icon-lg"
+              class="size-12 text-xl"
+              aria-label="Restar un punto al equipo 1"
+              [disabled]="scores[0] === 0"
+              (click)="removePoint($event, 0)"
+            >−</button>
+            <button
+              hlmBtn
+              type="button"
+              size="icon-lg"
+              class="size-12 text-xl"
+              aria-label="Sumar un punto al equipo 1"
+              [disabled]="scores[0] === 30"
+              (click)="addPointFromControl($event, 0)"
+            >+</button>
           </div>
         </div>
   
@@ -84,25 +111,51 @@ export class TrucoService {
   
         <!-- Team 2 Side -->
         <div 
-          class="h-full cursor-pointer grid grid-rows-[1fr_auto_1fr] py-4 sm:px-8"
-          (click)="addPoint(1)"
-          (contextmenu)="removePoint($event, 1)"
+          class="h-full grid grid-rows-[1fr_auto] py-4 sm:px-8"
         >
-          <!-- Malas -->
-          <div class="grid grid-cols-1 place-items-center gap-4">
-            @for (stick of getSticks(scores[1] > 15 ? 15 : scores[1]); track $index) {
-              <app-palitos [count]="stick"></app-palitos>
-            }
+          <div
+            class="min-h-0 cursor-pointer grid grid-rows-[1fr_auto_1fr]"
+            (click)="addPoint(1)"
+            (contextmenu)="removePoint($event, 1)"
+          >
+            <!-- Malas -->
+            <div class="grid grid-cols-1 place-items-center gap-4">
+              @for (stick of getSticks(scores[1] > 15 ? 15 : scores[1]); track $index) {
+                <app-palitos [count]="stick"></app-palitos>
+              }
+            </div>
+
+            <!-- Midline Divider -->
+            <div class="w-full h-1 bg-zinc-700 my-4 opacity-50"></div>
+
+            <!-- Buenas -->
+            <div class="grid grid-cols-1 place-items-center gap-4">
+              @for (stick of getSticks(Math.max(0, scores[1] - 15)); track $index) {
+                <app-palitos [count]="stick"></app-palitos>
+              }
+            </div>
           </div>
-          
-          <!-- Midline Divider -->
-          <div class="w-full h-1 bg-zinc-700 my-4 opacity-50"></div>
-  
-          <!-- Buenas -->
-          <div class="grid grid-cols-1 place-items-center gap-4">
-            @for (stick of getSticks(Math.max(0, scores[1] - 15)); track $index) {
-              <app-palitos [count]="stick"></app-palitos>
-            }
+
+          <div class="flex items-center justify-between gap-4 px-4 pt-4">
+            <button
+              hlmBtn
+              type="button"
+              variant="outline"
+              size="icon-lg"
+              class="size-12 text-xl"
+              aria-label="Restar un punto al equipo 2"
+              [disabled]="scores[1] === 0"
+              (click)="removePoint($event, 1)"
+            >−</button>
+            <button
+              hlmBtn
+              type="button"
+              size="icon-lg"
+              class="size-12 text-xl"
+              aria-label="Sumar un punto al equipo 2"
+              [disabled]="scores[1] === 30"
+              (click)="addPointFromControl($event, 1)"
+            >+</button>
           </div>
         </div>
       </main>
@@ -133,8 +186,14 @@ export class TrucoComponent {
     this.trucoService.addPoint(team);
   }
 
+  addPointFromControl(event: Event, team: 0 | 1) {
+    event.stopPropagation();
+    this.addPoint(team);
+  }
+
   removePoint(event: Event, team: 0 | 1) {
-    event.preventDefault(); // Prevent context menu
+    event.preventDefault(); // Evita el menú contextual.
+    event.stopPropagation();
     this.trucoService.removePoint(team);
   }
 
